@@ -15,7 +15,7 @@ class CreateAttendanceFaultsTable extends Migration
     {
         Schema::create('attendance_faults', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('description',194);
+            $table->string('description',594);
             $table->foreignId('attendance_id')->constrained('attendances');
             $table->foreignId('employee_id')->constrained('employees');
             $table->timestamps();

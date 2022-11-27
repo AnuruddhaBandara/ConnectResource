@@ -17,7 +17,7 @@ class CreateShiftsTable extends Migration
             $table->bigIncrements('id');
             $table->dateTime('shift_start_time');
             $table->dateTime('shift_end_time');
-            $table->string('description');
+            $table->string('description',594);
             $table->foreignId('schedule_id')->constrained('schedules');
             $table->timestamps();
         });

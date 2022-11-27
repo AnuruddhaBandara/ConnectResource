@@ -15,7 +15,7 @@ class CreateSchedulesTable extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('description',194)->nullable();
+            $table->string('description',594)->nullable();
             $table->foreignId('employee_id')->constrained('employees');
             $table->foreignId('location_id')->constrained('locations');
             $table->timestamps();
