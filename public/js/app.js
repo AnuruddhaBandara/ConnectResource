@@ -65976,7 +65976,7 @@ var Attendance = /*#__PURE__*/function (_Component) {
     key: "getAttendanceList",
     value: function getAttendanceList() {
       var _this2 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/attendance-list').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/attendance-list').then(function (response) {
         _this2.setState({
           attendancelist: response.data
         });
@@ -66065,12 +66065,9 @@ var FileUpload = /*#__PURE__*/function (_Component) {
     key: "submit",
     value: function submit(e) {
       e.preventDefault();
-      console.log("hii 1", this.state.selectedFile);
       var formData = new FormData();
       formData.append('file', this.state.selectedFile);
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/import', formData).then(function (response) {
-        console.log('sdsad');
-      });
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('api/import', formData).then(function (response) {});
     }
   }, {
     key: "handleInputChange",
@@ -66079,7 +66076,6 @@ var FileUpload = /*#__PURE__*/function (_Component) {
       this.setState({
         selectedFile: event.target.files[0]
       });
-      console.log('sdsad');
     }
   }, {
     key: "render",

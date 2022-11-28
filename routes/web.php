@@ -20,5 +20,3 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/attendance-list', 'AttendanceController@getAttendance')->name('attendance-list');
-Route::post('/import', 'AttendanceController@importAttendaceSheet');

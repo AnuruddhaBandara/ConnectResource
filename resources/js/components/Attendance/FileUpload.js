@@ -17,11 +17,9 @@ class FileUpload extends Component {
 
     submit(e) {
       e.preventDefault();
-      console.log("hii 1", this.state.selectedFile);
         const formData = new FormData();
         formData.append('file', this.state.selectedFile);
-        Axios.post('/import', formData).then((response)  => {
-          console.log('sdsad');
+        Axios.post('api/import', formData).then((response)  => {
         });
     }
     handleInputChange(event) {
@@ -29,7 +27,6 @@ class FileUpload extends Component {
       this.setState({
           selectedFile: event.target.files[0],
         })
-        console.log('sdsad');
   }
 
     render() {

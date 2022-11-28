@@ -20,7 +20,7 @@ class Attendance extends Component {
 
     //get attendance list
     getAttendanceList() {
-        Axios.get('/attendance-list').then((response) => {
+        Axios.get('api/attendance-list').then((response) => {
             this.setState({
                 attendancelist: response.data
             });
