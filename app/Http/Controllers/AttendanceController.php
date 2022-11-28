@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\AttendanceService;
+use App\Services\AttendanceFaultService;
 use DateTime;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AttendanceController extends Controller
 {
     private $attendanceService;
+    private $attendanceFaultService;
 
-
-    public function __construct(AttendanceService $attendanceService)
+    public function __construct(AttendanceService $attendanceService,AttendanceFaultService $attendanceFaultService)
     {
         $this->attendanceService = $attendanceService;
+        $this->attendanceFaultService = $attendanceFaultService;
     }
 
     public function getAttendance()
@@ -56,5 +62,56 @@ class AttendanceController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function importAttendaceSheet(Request $req) {
+        try
+        {
+            $file = $req->file('file');
+            $spreadsheet = IOFactory::load($file->getRealPath());
+            $sheet        = $spreadsheet->getActiveSheet();
+            $row_limit    = $sheet->getHighestDataRow();
+            $column_limit = $sheet->getHighestDataColumn();
+            $row_range    = range(2, $row_limit);
+            $column_range = range('A', $column_limit);
+            $data = [];
+            foreach ($row_range as $row) {
+                $day = date("Y-m-d",strtotime($sheet->getCell('A' . $row)->getValue()));
+                $check_in = ($sheet->getCell('B' . $row)->getValue()) ? date("Y-m-d H:i:s",strtotime($sheet->getCell('B' . $row)->getValue())) : null;
+                $check_out =($sheet->getCell('C' . $row)->getValue()) ? date("Y-m-d H:i:s",strtotime($sheet->getCell('C' . $row)->getValue())): null;
+                $status = 'Available';
+                if($check_in == null || $check_out == null || ($check_in == null && $check_out == null)){
+                    $status = 'N/A';
+                }
+                array_push($data, [
+                    'day' => ($day) ? $day : null ,
+                    'check_in'  => ($check_in) ? $check_in : null,
+                    'check_out'  => ($check_out) ? $check_out : null,
+                    'status' => $status,
+                    'schedule_id' => ($sheet->getCell('D' . $row)->getValue()) ? $sheet->getCell('D' . $row)->getValue() : null ,
+                    'employee_id' => ($sheet->getCell('E' . $row)->getValue()) ? $sheet->getCell('E' . $row)->getValue() : null ,
+                ]);
+            }
+            //insert Attendance
+            $this->attendanceService->addAttendance($data);
+
+            //get all Attendance
+            $attendances = $this->attendanceService->getAttendance();
+            $attendance_fault = [];
+            foreach($attendances as $attendance){
+                if($attendance->status == 'N/A'){
+                    array_push($attendance_fault,[
+                        'description' => 'aaaaaaaa',
+                        'attendance_id' => $attendance->id
+                    ]);
+                }
+            }
+            //add attendance faults
+            $this->attendanceFaultService->addAttendanceFault($attendance_fault);
+            dd('Success');
+        }
+        catch(\Throwable $th){
+            dd($th->getMessage(),$th->getLine());
+        }
     }
 }

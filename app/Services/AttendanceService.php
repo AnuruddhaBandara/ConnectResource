@@ -11,6 +11,8 @@ class AttendanceService {
         $attedance = Attendance::with('employees')->get();
         return $attedance;
     }
-}
 
-?>
+    public function addAttendance(array $data){
+        return Attendance::insert($data);
+    }
+}
