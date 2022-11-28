@@ -102,13 +102,13 @@ class AttendanceController extends Controller
                 if($attendance->status == 'N/A'){
                     array_push($attendance_fault,[
                         'description' => 'aaaaaaaa',
-                        'attendance_id' => $attendance->id
+                        'attendance_id' => $attendance->id,
+                        'employee_id' => $attendance->employee_id
                     ]);
                 }
             }
             //add attendance faults
             $this->attendanceFaultService->addAttendanceFault($attendance_fault);
-            dd('Success');
         }
         catch(\Throwable $th){
             dd($th->getMessage(),$th->getLine());

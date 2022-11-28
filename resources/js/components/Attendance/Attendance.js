@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import FileUpload from "./FileUpload";
 
 class Attendance extends Component {
 
@@ -30,6 +31,7 @@ class Attendance extends Component {
     render() {
         return (
             <div className="container">
+                <FileUpload/>
                 <div className="row justify-content-center">
                     <div className="col-md-12">
                         <div className="card">
