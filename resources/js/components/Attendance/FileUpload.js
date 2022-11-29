@@ -44,6 +44,12 @@ class FileUpload extends Component {
                     </div>
      
                     <div className="card-body">
+
+                    <div className="form-group py-2">
+                        <label htmlFor="images">Download Sample Excel</label>
+                        <a href="attendance.xlsx" download> Download file</a>
+                        
+                      </div>
                       <div className="form-group py-2">
                         <label htmlFor="images">Impot Excel</label>
                         <input
