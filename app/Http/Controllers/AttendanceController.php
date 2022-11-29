@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -67,6 +68,7 @@ class AttendanceController extends Controller
     public function importAttendaceSheet(Request $req) {
         try
         {
+            DB::beginTransaction();
             $file = $req->file('file');
             $spreadsheet = IOFactory::load($file->getRealPath());
             $sheet        = $spreadsheet->getActiveSheet();
@@ -93,7 +95,7 @@ class AttendanceController extends Controller
                 ]);
             }
             //insert Attendance
-            $this->attendanceService->addAttendance($data);
+            $attend = $this->attendanceService->addAttendance($data);
 
             //get all Attendance
             $attendances = $this->attendanceService->getAttendance();
@@ -108,7 +110,14 @@ class AttendanceController extends Controller
                 }
             }
             //add attendance faults
-            $this->attendanceFaultService->addAttendanceFault($attendance_fault);
+            $attend_fault = $this->attendanceFaultService->addAttendanceFault($attendance_fault);
+            if($attend && $attend_fault){
+                DB::commit();
+
+            }
+            else {
+               DB::rollBack();
+            }
         }
         catch(\Throwable $th){
             dd($th->getMessage(),$th->getLine());

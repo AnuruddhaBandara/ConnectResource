@@ -1,6 +1,7 @@
 import Axios from "axios";
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
+import swal from "sweetalert";
 
 class FileUpload extends Component {
 
@@ -20,6 +21,18 @@ class FileUpload extends Component {
         const formData = new FormData();
         formData.append('file', this.state.selectedFile);
         Axios.post('api/import', formData).then((response)  => {
+          if(response.status === 200){
+
+            swal({
+            title: "Success!",
+            text: "Attended Sheet Added!",
+            icon: "success",
+            button: "OK!",
+            }).then(() => {
+              location.reload();
+            })
+          
+                }
         });
     }
     handleInputChange(event) {

@@ -13,6 +13,11 @@ class AttendanceService {
     }
 
     public function addAttendance(array $data){
-        return Attendance::insert($data);
+        if(Attendance::insert($data)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
