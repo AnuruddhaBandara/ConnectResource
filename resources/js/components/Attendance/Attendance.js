@@ -24,7 +24,6 @@ class Attendance extends Component {
             this.setState({
                 attendancelist: response.data
             });
-            console.log(this.state.attendancelist);
         });
     }
 
@@ -46,7 +45,7 @@ class Attendance extends Component {
                                 </thead>
                                 <tbody>
                                     {
-
+                                        this.state.attendancelist.length > 0 &&
                                         this.state.attendancelist.map((row) =>
 
                                             <tr key={row.id}>
